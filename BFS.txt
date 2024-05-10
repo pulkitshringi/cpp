@@ -1,0 +1,63 @@
+//BFS:
+
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+// Function to perform BFS traversal of the graph
+void BFS(vector<vector<int>>& graph, int start) {
+    int numVertices = graph.size();
+    vector<bool> visited(numVertices, false);
+    
+    // Create a queue for BFS
+    queue<int> q;
+    
+    // Mark the current node as visited and enqueue it
+    visited[start] = true;
+    q.push(start);
+    
+    while (!q.empty()) {
+        // Dequeue a vertex from queue and print it
+        int currentVertex = q.front();
+        cout << currentVertex << " ";
+        q.pop();
+        
+        // Get all adjacent vertices of the dequeued vertex currentVertex
+        // If an adjacent vertex has not been visited, mark it visited and enqueue it
+        for (int i = 0; i < graph[currentVertex].size(); ++i) {
+            int adjacentVertex = graph[currentVertex][i];
+            if (!visited[adjacentVertex]) {
+                visited[adjacentVertex] = true;
+                q.push(adjacentVertex);
+            }
+        }
+    }
+}
+
+int main() {
+    /* 
+    Graph:
+           0
+          / \
+         1   2
+        / \ /
+       3   4
+    */
+
+    //graph represented using adjacency lists
+    vector<vector<int>> graph = {
+        {1, 2},     // Adjacent vertices of vertex 0
+        {0, 3, 4},  // Adjacent vertices of vertex 1
+        {0, 4},     // Adjacent vertices of vertex 2
+        {1},        // Adjacent vertices of vertex 3
+        {1, 2}      // Adjacent vertices of vertex 4
+    };
+
+    cout << "BFS traversal starting from vertex 0: ";
+    BFS(graph, 0); // Start BFS traversal from vertex 0
+    cout << endl;
+
+    return 0;
+}
