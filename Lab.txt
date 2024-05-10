@@ -1,0 +1,400 @@
+//BFS:
+
+#include <iostream>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+void BFS(vector<vector<int>>& graph, int start) {
+    int n = graph.size();
+    vector<bool> visited(n, false);
+    queue<int> q;
+    
+    visited[start] = true;
+    q.push(start);
+    
+    while (!q.empty()) {
+        int currentVertex = q.front();
+        cout << currentVertex << " ";
+        q.pop();
+        for (int i = 0; i < graph[currentVertex].size(); ++i) {
+            int adjacentVertex = graph[currentVertex][i];
+            if (!visited[adjacentVertex]) {
+                visited[adjacentVertex] = true;
+                q.push(adjacentVertex);
+            }
+        }
+    }
+}
+
+int main() {
+    /*
+        Graph:
+           0
+          / \
+         1   2
+        / \ / \
+       3   4   5
+    */
+    
+    // Example graph represented using adjacency lists
+    vector<vector<int>> graph = {
+        {1, 2}, 
+        {0, 3, 4},
+        {0, 4,5},
+        {1},
+        {1, 2},
+	{2}
+    };
+    cout << "BFS traversal starting from vertex 0: ";
+    BFS(graph, 0); // Start BFS traversal from vertex 0
+    cout << endl;
+
+    return 0;
+}
+
+//DFS:
+
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+// Function to perform DFS traversal of the graph
+void DFS(vector<vector<int>>& graph, int start) {
+    int n = graph.size();
+    vector<bool> visited(n, false);
+    stack<int> s;
+
+    s.push(start);
+    
+    while (!s.empty()) {
+        int currentVertex = s.top();
+        s.pop();
+
+        if (!visited[currentVertex]) {
+            cout << currentVertex << " ";
+            visited[currentVertex] = true;
+
+            for (int i = graph[currentVertex].size() - 1; i >= 0; --i) {
+                int adjacentVertex = graph[currentVertex][i];
+                if (!visited[adjacentVertex]) {
+                    s.push(adjacentVertex);
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    /*
+        Graph:
+           0
+          / \
+         1   2
+        / \ / \
+       3   4   5
+    */
+    vector<vector<int>> graph = {
+        {1, 2}, 
+        {0, 3, 4},
+        {0, 4,5},
+        {1},
+        {1, 2},
+	{2}
+    };
+    DFS(graph, 0);
+}
+
+
+# Linear Regression
+
+
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X + np.random.randn(100, 1)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+plt.scatter(X_test, y_test, color='blue')
+plt.plot(X_test, y_pred, color='red', linewidth=2)
+plt.title('Linear Regression Model')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.show()
+
+
+# Sequential Model (Neural Network)
+
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
+
+# Generating random data for binary classification
+np.random.seed(0)
+X = np.random.randn(1000, 10)  # Features
+y = np.random.randint(2, size=(1000, 1))  # Binary labels
+
+# Splitting data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Creating the deep learning model
+model = Sequential([
+    Dense(64, input_shape=(10,), activation='relu'),
+    Dense(32, activation='relu'),
+    Dense(1, activation='sigmoid')
+])
+
+# Compiling the model
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+
+# Training the model
+model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+
+# Evaluating the model on test data
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f'Test Loss: {loss}, Test Accuracy: {accuracy}')
+
+
+#Best FS
+
+import heapq
+
+def bfs(graph, start, goal):
+    frontier = [(start,0)]
+    visited = set()
+    
+    while frontier:
+        current_node, cost = heapq.heappop(frontier)
+        if current_node == goal:
+            return True
+        visited.add(current_node)
+
+        for neighbor, neighbor_cost in graph[current_node]:
+            if neighbor not in visited:
+                heapq.heappush(frontier, (neighbor,neighbor_cost))
+    
+    return False
+    
+'''
+State space tree: 
+   A
+  / \
+ B   C
+/     \
+D       E
+        \
+         F
+'''
+graph = {
+    'A': [('B', 5), ('C', 7)],
+    'B': [('D', 10)],
+    'C': [('E', 3)],
+    'D': [('F', 12)],
+    'E': [('F', 2)],
+    'F': []
+}
+
+start = 'A'
+goal = 'F'
+
+if bfs(graph, start, goal):
+    print("Goal found!")
+else:
+    print("Goal not found.")
+
+#Monty hall
+
+import random
+
+def mh(trials, switch):
+    wins = 0
+    for _ in range(trials):
+        doors = [1,2,3]
+        car = random.choice(doors)
+        #pick a door
+        pick = random.choice(doors)
+        
+        #host opens a new door
+        doors.remove(car)
+        if pick!=car:
+            doors.remove(pick)
+        opened = random.choice(doors)
+    
+        #Contestant switches
+        if switch:
+            doors = [1,2,3]
+            doors.remove(opened)
+            doors.remove(pick)
+            pick = doors[0]
+        
+        if pick == car:
+            wins +=1
+    
+    return wins/trials
+        
+trials = 1000
+
+switch = True;
+winning_percentage = mh(trials, switch)
+print(f'Winning percentage with switching: {winning_percentage*100}%')
+
+switch = False
+winning_percentage = mh(trials, switch)
+print(f'Winning percentage without switching: {winning_percentage*100}%')
+
+//Water Jug
+
+#include <iostream>
+using namespace std;
+
+void waterJug(int jug1, int jug2, int target) {
+    int curr1 = 0;
+    int curr2 = 0;
+    
+    while(curr1!=target && curr2!=target){
+        if (curr1==0){
+            curr1 = jug1;
+            cout<<"Fill Jug1"<<endl;
+        }
+        if (curr2 != jug2){
+            int pour = min(curr1, jug2-curr2);
+            curr2 += pour;
+            curr1 -= pour;
+            cout<<"Pour "<<curr2<<" units from jug1 to jug2"<<endl;
+        }
+        if(curr2 == jug2){
+            curr2 = 0;
+            cout<<"Empty Jug2"<<endl;
+        }
+    }
+    cout<<"Target Reached";
+}
+
+int main() {
+    int jug1_capacity, jug2_capacity, target_amount;
+    cout << "Enter capacity of jug1: ";
+    cin >> jug1_capacity;
+    cout << "Enter capacity of jug2: ";
+    cin >> jug2_capacity;
+    cout << "Enter target amount: ";
+    cin >> target_amount;
+
+    waterJug(jug1_capacity, jug2_capacity, target_amount);
+
+    return 0;
+}
+
+
+# Sentiment Analysis
+
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn.model_selection import train_test_split
+
+# Example dataset for sentiment analysis
+texts = ["I love this movie!",
+         "This movie is terrible.",
+         "The acting was amazing.",
+         "The plot was confusing."]
+
+labels = np.array([1, 0, 1, 0])  # Positive (1) or negative (0) sentiment
+
+# Tokenizing and padding the text data
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(texts)
+sequences = tokenizer.texts_to_sequences(texts)
+max_length = max([len(seq) for seq in sequences])
+padded_sequences = pad_sequences(sequences, maxlen=max_length, padding='post')
+
+# Splitting data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(padded_sequences, labels, test_size=0.2, random_state=42)
+
+# Creating the NLP model
+model = Sequential([
+    Embedding(input_dim=len(tokenizer.word_index)+1, output_dim=64, input_length=max_length),
+    LSTM(64),
+    Dense(1, activation='sigmoid')
+])
+
+# Compiling the model
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+
+# Training the model
+model.fit(X_train, y_train, epochs=10, batch_size=1, validation_data=(X_test, y_test))
+
+# Evaluating the model on test data
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f'Test Loss: {loss}, Test Accuracy: {accuracy}')
+
+
+#A*
+
+import heapq
+
+def astar_search(start_state, goal_state, get_neighbors_fn, heuristic_fn):
+    frontier = [(heuristic_fn(start_state), start_state)]  # Priority queue with heuristic value and state
+    explored = set()  # Set to keep track of explored states
+    parent_map = {}  # Dictionary to store parent nodes
+    
+    while frontier:
+        _, current_state = heapq.heappop(frontier)  # Pop the state with the lowest heuristic value
+        
+        if current_state == goal_state:
+            # Goal state reached, construct path
+            path = []
+            while current_state:
+                path.append(current_state)
+                current_state = parent_map.get(current_state)
+            return path[::-1]  # Return path in reverse order
+        
+        explored.add(current_state)
+        
+        for neighbor in get_neighbors_fn(current_state):
+            if neighbor not in explored:
+                parent_map[neighbor] = current_state
+                heapq.heappush(frontier, (heuristic_fn(neighbor), neighbor))
+    
+    return None  # Goal state not reachable
+
+# Example heuristic function (Manhattan distance)
+def manhattan_distance(state, goal_state):
+    return abs(state[0] - goal_state[0]) + abs(state[1] - goal_state[1])
+
+# Example function to get neighbors (up, down, left, right)
+def get_neighbors(state):
+    x, y = state
+    neighbors = []
+    for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+        new_x, new_y = x + dx, y + dy
+        neighbors.append((new_x, new_y))
+    return neighbors
+
+# Example usage
+start_state = (0, 0)
+goal_state = (4, 4)
+path = astar_search(start_state, goal_state, get_neighbors, lambda state: manhattan_distance(state, goal_state))
+if path:
+    print("Path found:", path)
+else:
+    print("Goal not reachable.")
